@@ -1,5 +1,6 @@
 import sys
 import unittest
+import random
 from framework import AssemblyTest, run_raw_venus, test_asm_dir, _venus_default_args
 from tools.check_hashes import check_hashes
 
@@ -90,6 +91,36 @@ class TestRelu(unittest.TestCase):
         # generate the `assembly/TestRelu_test_invalid_n.s` file and run it through venus
         t.execute(code=36)
 
+    def test_relu_empty_list(self):
+        t = AssemblyTest(self, "relu.s")
+        array0 = t.array([])
+        t.input_array("a0", array0)
+        t.input_scalar("a1", len(array0))
+        t.call("relu")
+        t.execute(code=36)
+
+    def test_relu_random_list(self):
+        t = AssemblyTest(self, "relu.s")
+
+        length = random.randint(1, 1000)
+        random_list = []
+        for _ in range(length):
+            random_list.append(random.randint(-1000, 1000))
+        random_array = t.array(random_list)
+
+        valid_list = []
+        for e in random_list:
+            if e < 0:
+                valid_list.append(0)
+            else:
+                valid_list.append(e)
+
+        t.input_array("a0", random_array)
+        t.input_scalar("a1", len(random_array))
+
+        t.call("relu")
+        t.check_array(random_array, valid_list)
+        t.execute()
 
 class TestArgmax(unittest.TestCase):
     def test_argmax_standard(self):
