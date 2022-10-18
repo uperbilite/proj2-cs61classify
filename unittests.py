@@ -340,6 +340,80 @@ class TestDot(unittest.TestCase):
         t.call("dot")
         t.execute(code=36)
 
+    def test_dot_random_list(self):
+        t = AssemblyTest(self, "dot.s")
+
+        length0 = random.randint(1, 1000)
+        random_list0 = []
+        for _ in range(length0):
+            random_list0.append(random.randint(-1000, 1000))
+        arr0 = t.array(random_list0)
+
+        length1 = random.randint(1, 1000)
+        random_list1 = []
+        for _ in range(length1):
+            random_list1.append(random.randint(-1000, 1000))
+        arr1 = t.array(random_list1)
+
+        if length0 < length1:
+            length = length0
+        else:
+            length = length1
+
+        sum = 0
+        for i in range(length):
+            sum += random_list0[i] * random_list1[i]
+
+        t.input_array("a0", arr0)
+        t.input_array("a1", arr1)
+        t.input_scalar("a2", length)
+        t.input_scalar("a3", 1)
+        t.input_scalar("a4", 1)
+        t.call("dot")
+        t.check_scalar("a0", sum)
+        t.execute()
+
+    def test_dot_random_list_and_stride(self):
+        t = AssemblyTest(self, "dot.s")
+
+        length0 = random.randint(1, 1000)
+        length1 = random.randint(1, 1000)
+        length = min(length0, length1)
+
+        stride0 = random.randint(1, length)
+        stride1 = random.randint(1, length)
+        stride = max(stride0, stride1)
+
+        length = length // stride
+
+        random_list0 = []
+        for _ in range(length0):
+            random_list0.append(random.randint(-1000, 1000))
+
+        random_list1 = []
+        for _ in range(length1):
+            random_list1.append(random.randint(-1000, 1000))
+
+
+        sum = 0
+        i0 = 0
+        i1 = 0
+        for _ in range(length):
+            sum += random_list0[i0] * random_list1[i1]
+            i0 += stride0
+            i1 += stride1
+
+        arr0 = t.array(random_list0)
+        arr1 = t.array(random_list1)
+        t.input_array("a0", arr0)
+        t.input_array("a1", arr1)
+        t.input_scalar("a2", length)
+        t.input_scalar("a3", stride0)
+        t.input_scalar("a4", stride1)
+        t.call("dot")
+        t.check_scalar("a0", sum)
+        t.execute()
+
 
 class TestMatmul(unittest.TestCase):
     def doMatmul(self, m0, m0_rows, m0_cols, m1, m1_rows, m1_cols, result, code=0):
