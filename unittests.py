@@ -584,6 +584,29 @@ class TestMatmul(unittest.TestCase):
             code=38,
         )
 
+    def test_matmul_random_matrix(self):
+        height1 = random.randint(1, 50)
+        width1 = random.randint(1, 50)
+        height2 = width1
+        width2 = random.randint(1, 50)
+
+        m1_list = []
+        m2_list = []
+        for _ in range(height1 * width1):
+            m1_list.append(random.randint(-1000, 1000))
+        for _ in range(height2 * width2):
+            m2_list.append(random.randint(-1000, 1000))
+
+        m3_list = []
+        for i in range(height1):
+            for j in range(width2):
+                sum = 0
+                for k in range(width1):
+                    sum += m1_list[i * width1 + k] * m2_list[j + k * width2]
+                m3_list.append(sum)
+
+        self.doMatmul(m1_list, height1, width1, m2_list, height2, width2, m3_list)
+
 
 class TestReadMatrix(unittest.TestCase):
     def doReadMatrix(
