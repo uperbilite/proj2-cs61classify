@@ -162,6 +162,64 @@ class TestArgmax(unittest.TestCase):
         # generate the `assembly/TestArgmax_test_invalid_n.s` file and run it through venus
         t.execute(code=36)
 
+    def test_argmax_repeat_element(self):
+        t = AssemblyTest(self, "argmax.s")
+        array0 = t.array([45, -658, 71, 45, 1, -10, 34, 71, -99])
+        t.input_array("a0", array0)
+        t.input_scalar("a1", len(array0))
+        t.call("argmax")
+        t.check_scalar("a0", 2)
+        t.execute()
+
+    def test_argmax_more_repeat_element(self):
+        t = AssemblyTest(self, "argmax.s")
+        array0 = t.array([2, 2, 2, 2, 1, 1, 1, 1, 3, 3, 3, 3])
+        t.input_array("a0", array0)
+        t.input_scalar("a1", len(array0))
+        t.call("argmax")
+        t.check_scalar("a0", 8)
+        t.execute()
+
+    def test_argmax_last_max_element(self):
+        t = AssemblyTest(self, "argmax.s")
+        array0 = t.array([43, 10, 32, -543, 342, -543, -54, 25, 609])
+        t.input_array("a0", array0)
+        t.input_scalar("a1", len(array0))
+        t.call("argmax")
+        t.check_scalar("a0", 8)
+        t.execute()
+
+    def test_argmax_empty_list(self):
+        t = AssemblyTest(self, "argmax.s")
+        array0 = t.array([])
+        t.input_array("a0", array0)
+        t.input_scalar("a1", len(array0))
+        t.call("argmax")
+        t.execute(code=36)
+
+    def test_argmax_random_list(self):
+        t = AssemblyTest(self, "argmax.s")
+
+        length = random.randint(1, 1000)
+        random_list = []
+        for _ in range(length):
+            random_list.append(random.randint(-1000, 1000))
+        random_array = t.array(random_list)
+
+        max_index = 0
+        max_element = random_list[0]
+        for i in range(length):
+            if random_list[i] > max_element:
+                max_index = i
+                max_element = random_list[i]
+
+        t.input_array("a0", random_array)
+        t.input_scalar("a1", len(random_array))
+
+        t.call("argmax")
+        t.check_scalar("a0", max_index)
+        t.execute()
+
 
 class TestDot(unittest.TestCase):
     def test_dot_standard(self):
