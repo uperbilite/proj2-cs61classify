@@ -124,6 +124,8 @@ write_matrix:
     lw a0, 0(sp)
     addi sp, sp, 4
 
+    jal write_matrix_free
+
     # Epilogue
     lw s3, 0(sp)
     lw s2, 4(sp)
@@ -148,3 +150,20 @@ fwrite_exp:
 fclose_exp:
     li a0, 28
     j exit
+
+
+write_matrix_free:
+    addi sp, sp, -8
+    sw ra, 4(sp)
+    sw a0, 0(sp)
+
+    mv a0, s1
+    jal free
+    mv a0, s2
+    jal free
+
+    lw a0, 0(sp)
+    lw ra, 4(sp)
+    addi sp, sp, 8
+
+    jr ra

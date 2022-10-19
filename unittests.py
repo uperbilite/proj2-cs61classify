@@ -102,7 +102,7 @@ class TestRelu(unittest.TestCase):
     def test_relu_random_list(self):
         t = AssemblyTest(self, "relu.s")
 
-        length = random.randint(1, 1000)
+        length = random.randint(1, 100)
         random_list = []
         for _ in range(length):
             random_list.append(random.randint(-1000, 1000))
@@ -200,7 +200,7 @@ class TestArgmax(unittest.TestCase):
     def test_argmax_random_list(self):
         t = AssemblyTest(self, "argmax.s")
 
-        length = random.randint(1, 1000)
+        length = random.randint(1, 100)
         random_list = []
         for _ in range(length):
             random_list.append(random.randint(-1000, 1000))
@@ -343,7 +343,7 @@ class TestDot(unittest.TestCase):
     def test_dot_random_list(self):
         t = AssemblyTest(self, "dot.s")
 
-        length0 = random.randint(1, 1000)
+        length0 = random.randint(1, 100)
         random_list0 = []
         for _ in range(length0):
             random_list0.append(random.randint(-1000, 1000))
@@ -376,8 +376,8 @@ class TestDot(unittest.TestCase):
     def test_dot_random_list_and_stride(self):
         t = AssemblyTest(self, "dot.s")
 
-        length0 = random.randint(1, 1000)
-        length1 = random.randint(1, 1000)
+        length0 = random.randint(1, 100)
+        length1 = random.randint(1, 100)
         length = min(length0, length1)
 
         stride0 = random.randint(1, length)
@@ -585,10 +585,10 @@ class TestMatmul(unittest.TestCase):
         )
 
     def test_matmul_random_matrix(self):
-        height1 = random.randint(1, 50)
-        width1 = random.randint(1, 50)
+        height1 = random.randint(1, 25)
+        width1 = random.randint(1, 25)
         height2 = width1
-        width2 = random.randint(1, 50)
+        width2 = random.randint(1, 25)
 
         m1_list = []
         m2_list = []
